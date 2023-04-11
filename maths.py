@@ -19,3 +19,11 @@ def norm(vec):
 
 def dot(vec1, vec2):
     return np.dot(vec1, vec2)
+
+
+def random_direction():
+    dir = np.ones(3)
+    while length(dir) > 1:
+        dir = np.random.random(3)
+
+    return dir

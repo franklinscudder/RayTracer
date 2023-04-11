@@ -1,7 +1,10 @@
 import numpy as np
+from tqdm import tqdm
 
 from maths import deg2rad, norm
 from rays import Ray
+
+RAYS_PER_PIXEL = 10
 
 
 class Camera:
@@ -86,14 +89,14 @@ class Camera:
         return np.linalg.inv(self.cam_to_world_matrix())
 
     def draw(self, scene):
-        pixel_data = np.zeros((self.resX, self.resY))
-        for px in range(self.resX):
-            for py in range(self.resY):
-                print(px, py)
-                ray = Ray(self.pos, self.get_ray_dir(px, py))
-                pixel_data[px, py] = ray.trace(scene)
+        pixel_data = np.zeros((self.resX, self.resY, 3))
+        for n in tqdm(range(RAYS_PER_PIXEL)):
+            for px in range(self.resX):
+                for py in range(self.resY):
+                    ray = Ray(self.pos, self.get_ray_dir(px, py))
+                    pixel_data[px, py, :] += ray.trace(scene)
 
-        return pixel_data
+        return pixel_data / pixel_data.max()
 
 
 if __name__ == "__main__":
